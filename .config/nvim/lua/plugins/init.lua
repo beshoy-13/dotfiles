@@ -1,12 +1,19 @@
 return {
-  -- ── Formatter (conform) ───────────────────────────────────────
+
+  -- ══════════════════════════════════════════════════════════════
+  --  FORMATTING
+  -- ══════════════════════════════════════════════════════════════
+
   {
     "stevearc/conform.nvim",
-    event = "BufWritePre", -- format on save
+    event = "BufWritePre",
     opts = require "configs.conform",
   },
 
-  -- ── LSP ───────────────────────────────────────────────────────
+  -- ══════════════════════════════════════════════════════════════
+  --  LSP & LANGUAGE SERVERS
+  -- ══════════════════════════════════════════════════════════════
+
   {
     "neovim/nvim-lspconfig",
     config = function()
@@ -14,23 +21,149 @@ return {
     end,
   },
 
-  -- ── Mason: auto-install web LSPs + formatters ─────────────────
   {
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
+        -- web
         "html-lsp",
         "css-lsp",
         "typescript-language-server",
         "eslint-lsp",
         "emmet-ls",
         "prettierd",
+        -- lua
         "stylua",
+        -- c / c++
+        "clangd",
+        "clang-format",
       },
     },
   },
 
-  -- ── Emmet  (! + Tab = boilerplate, div.x>p*3 + Tab = expand) ──
+  -- ══════════════════════════════════════════════════════════════
+  --  SNIPPETS
+  --  triggers (type keyword + Tab to expand):
+  --    cpp    →  C++ boilerplate  (#include iostream, main, return 0)
+  --    cmain  →  C  boilerplate   (#include stdio, main, return 0)
+  --    jmain  →  Java boilerplate (Scanner, class, main, sc.close)
+  --    pymain →  Python boilerplate (def main + __name__ guard)
+  -- ══════════════════════════════════════════════════════════════
+
+  {
+    "L3MON4D3/LuaSnip",
+    version = "v2.*",
+    build = "make install_jsregexp",
+    dependencies = { "rafamadriz/friendly-snippets" },
+    config = function()
+      local ls = require "luasnip"
+      local s = ls.snippet
+      local t = ls.text_node
+      local i = ls.insert_node
+
+      -- load VS Code-style snippets from friendly-snippets
+      require("luasnip.loaders.from_vscode").lazy_load()
+
+      -- ── C++ ───────────────────────────────────────────────────
+      ls.add_snippets("cpp", {
+        s("cpp", {
+          t {
+            "#include <iostream>",
+            "",
+            "using namespace std;",
+            "",
+            "int main() {",
+            "    ",
+          },
+          i(1, "// code here"),
+          t {
+            "",
+            "    return 0;",
+            "}",
+          },
+        }),
+      })
+
+      -- ── C ─────────────────────────────────────────────────────
+      ls.add_snippets("c", {
+        s("cmain", {
+          t {
+            "#include <stdio.h>",
+            "#include <stdlib.h>",
+            "",
+            "int main() {",
+            "    ",
+          },
+          i(1, "// code here"),
+          t {
+            "",
+            "    return 0;",
+            "}",
+          },
+        }),
+      })
+
+      -- ── Java ──────────────────────────────────────────────────
+      ls.add_snippets("java", {
+        s("jmain", {
+          t { "import java.util.Scanner;", "", "public class " },
+          i(1, "Main"),
+          t {
+            " {",
+            "    public static void main(String[] args) {",
+            "        Scanner sc = new Scanner(System.in);",
+            "        ",
+          },
+          i(2, "// code here"),
+          t {
+            "",
+            "        sc.close();",
+            "    }",
+            "}",
+          },
+        }),
+      })
+
+      -- ── Python ────────────────────────────────────────────────
+      ls.add_snippets("python", {
+        s("pymain", {
+          t {
+            "def main():",
+            "    ",
+          },
+          i(1, "# code here"),
+          t {
+            "",
+            "",
+            'if __name__ == "__main__":',
+            "    main()",
+          },
+        }),
+      })
+
+      -- ── Tab: expand snippet or jump to next stop ───────────────
+      vim.keymap.set({ "i", "s" }, "<Tab>", function()
+        if ls.expand_or_jumpable() then
+          ls.expand_or_jump()
+        else
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Tab>", true, false, true), "n", false)
+        end
+      end, { silent = true })
+
+      -- ── Shift-Tab: jump to previous stop ──────────────────────
+      vim.keymap.set({ "i", "s" }, "<S-Tab>", function()
+        if ls.jumpable(-1) then
+          ls.jump(-1)
+        end
+      end, { silent = true })
+    end,
+  },
+
+  -- ══════════════════════════════════════════════════════════════
+  --  HTML / JSX
+  -- ══════════════════════════════════════════════════════════════
+
+  -- Emmet  (! + Tab = HTML boilerplate,  div.x>p*3 + Tab = expand)
   {
     "mattn/emmet-vim",
     ft = {
@@ -73,7 +206,7 @@ return {
     end,
   },
 
-  -- ── Auto-close & rename HTML/JSX tags ─────────────────────────
+  -- Auto-close & rename HTML/JSX tags
   {
     "windwp/nvim-ts-autotag",
     ft = {
@@ -97,7 +230,11 @@ return {
     },
   },
 
-  -- ── Auto-pairs  ( → ()  " → ""  etc. ─────────────────────────
+  -- ══════════════════════════════════════════════════════════════
+  --  EDITING QUALITY OF LIFE
+  -- ══════════════════════════════════════════════════════════════
+
+  -- Auto-pairs  ( → ()   " → ""   { → {}   etc.
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
@@ -115,7 +252,7 @@ return {
     end,
   },
 
-  -- ── Inline color swatches  #hex / rgb() / tailwind ───────────
+  -- Inline color swatches for  #hex / rgb() / tailwind classes
   {
     "NvChad/nvim-colorizer.lua",
     ft = { "html", "css", "scss", "javascript", "typescript", "vue", "svelte" },
@@ -127,5 +264,30 @@ return {
         mode = "background",
       },
     },
+  },
+
+  -- ══════════════════════════════════════════════════════════════
+  --  DIAGNOSTICS & PROJECT HEALTH
+  -- ══════════════════════════════════════════════════════════════
+
+  -- Highlight TODO / FIXME / NOTE / HACK / BUG / WARN in every file
+  {
+    "folke/todo-comments.nvim",
+    event = "BufRead",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {},
+  },
+
+  -- Clean diagnostics panel
+  --   <leader>xx  →  all project diagnostics
+  --   <leader>xb  →  current buffer only
+  {
+    "folke/trouble.nvim",
+    cmd = "Trouble",
+    keys = {
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (project)" },
+      { "<leader>xb", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Diagnostics (buffer)" },
+    },
+    opts = {},
   },
 }

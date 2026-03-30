@@ -1,6 +1,11 @@
 local options = {
   formatters_by_ft = {
+    -- lua
     lua = { "stylua" },
+    -- c / c++
+    c = { "clang-format" },
+    cpp = { "clang-format" },
+    -- web
     html = { "prettierd", "prettier" },
     css = { "prettierd", "prettier" },
     scss = { "prettierd", "prettier" },
@@ -16,5 +21,4 @@ local options = {
     lsp_fallback = true,
   },
 }
-
 return options
