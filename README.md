@@ -1,263 +1,227 @@
-curl -s https://raw.githubusercontent.com/beshoy-13/dotfiles/main/README.md -o /tmp/old_readme.md && cat > ~/README.md << 'READMEEOF'
+<div align="center">
 
-# 🌙 dotfiles
+# ✦ dotfiles
 
-> **EndeavourOS · Hyprland (HyDE) · NvChad · Tokyo Night · Kitty · Zsh**
+**My personal system configuration for EndeavourOS + Hyprland (HyDE)**
 
-Personal dotfiles for my Arch-based setup — managed with a **bare Git repository**. No symlinks. No stow. No magic.
+![EndeavourOS](https://img.shields.io/badge/OS-EndeavourOS-blueviolet?style=flat-square&logo=endeavouros)
+![Hyprland](https://img.shields.io/badge/WM-Hyprland-cyan?style=flat-square)
+![HyDE](https://img.shields.io/badge/Framework-HyDE-informational?style=flat-square)
+![Shell](https://img.shields.io/badge/Shell-Zsh%20%2B%20p10k-green?style=flat-square)
+![Editor](https://img.shields.io/badge/Editor-Neovim%20(NvChad)-red?style=flat-square)
+
+</div>
 
 ---
 
-## 🖥️ System
+## 🖥 System Overview
 
-| Component      | Choice                     |
-| -------------- | -------------------------- |
-| **OS**         | EndeavourOS (Arch-based)   |
-| **WM**         | Hyprland (HyDE / hyprdots) |
-| **Bar**        | Waybar                     |
-| **Terminal**   | Kitty                      |
-| **Shell**      | Zsh + Powerlevel10k        |
-| **Editor**     | Neovim (NvChad)            |
-| **Theme**      | Tokyo Night                |
-| **Fetch**      | fastfetch                  |
-| **Launcher**   | Rofi                       |
-| **Wallpapers** | swww (managed by HyDE)     |
+| Component | Choice |
+|---|---|
+| OS | EndeavourOS (Arch-based) |
+| Window Manager | Hyprland (via HyDE framework) |
+| Terminal | Kitty |
+| Shell | Zsh + Powerlevel10k |
+| Editor | Neovim (NvChad v2.5+) |
+| Bar | Waybar |
+| Idle / Lock | hypridle + hyprlock |
+| System Info | fastfetch |
+| GPU | NVIDIA Quadro T1000 |
 
 ---
 
 ## 📁 What's Tracked
 
-\`\`\`
-~/.config/nvim/
-│ ├── lua/mappings.lua ← all keybindings
-│ ├── lua/plugins/init.lua ← plugins (emmet, autotag, autopairs, prettier, LSP)
-│ └── lua/configs/
-│ ├── lspconfig.lua ← html, css, ts, eslint, emmet LSP
-│ └── conform.lua ← prettier on save
-~/.config/hypr/ ← Hyprland + HyDE config
-~/.config/waybar/ ← status bar
-~/.config/kitty/ ← terminal (Tokyo Night)
-~/.config/zsh/ ← user.zsh, aliases, startup (fastfetch)
-~/.config/fastfetch/ ← fetch config + ascii art
-\`\`\`
+```
+~
+├── .config/
+│   ├── fastfetch/              # Fastfetch config + custom PNG images
+│   │   └── pngs/               # aisaka, arch, hyde, loli, pochita, ryuzaki
+│   ├── hypr/
+│   │   ├── hyprland.conf       # Main Hyprland config (source of truth)
+│   │   ├── keybindings.conf    # All keybinds
+│   │   ├── monitors.conf       # Monitor layout (NVIDIA Quadro T1000)
+│   │   ├── nvidia.conf         # NVIDIA-specific env vars and fixes
+│   │   ├── userprefs.conf      # Personal overrides on top of HyDE defaults
+│   │   ├── windowrules.conf    # Per-app window rules
+│   │   ├── workspaces.conf     # Workspace definitions
+│   │   ├── hypridle.conf       # Idle timeout → dim → lock → sleep chain
+│   │   ├── hyprlock.conf       # Lock screen config
+│   │   ├── pyprland.toml       # Pyprland scratchpad / plugin config
+│   │   ├── shaders.conf        # GPU shader effects
+│   │   ├── animations/         # 17 animation presets (classic, dynamic, minimal, etc.)
+│   │   ├── hyprlock/           # 8 hyprlock theme variants
+│   │   ├── themes/             # Wallbash color integration (colors, theme, wallbash)
+│   │   └── workflows/          # 5 workflow presets (default, editing, gaming, powersaver, snappy)
+│   ├── kitty/
+│   │   ├── kitty.conf          # Main terminal config
+│   │   ├── userprefs.conf      # Personal overrides
+│   │   ├── hyde.conf           # HyDE-managed kitty settings
+│   │   └── theme.conf          # Active color theme (wallbash-synced)
+│   ├── nvim/
+│   │   └── lua/
+│   │       ├── configs/
+│   │       │   ├── conform.lua     # Formatter config (conform.nvim)
+│   │       │   └── lspconfig.lua   # LSP servers (Mason-managed)
+│   │       ├── mappings.lua        # Custom keymaps
+│   │       └── plugins/
+│   │           └── init.lua        # Plugin declarations
+│   └── waybar/
+│       ├── config.jsonc        # Bar layout and modules
+│       ├── style.css           # Base styles
+│       ├── theme.css           # Active theme colors (wallbash-synced)
+│       ├── user-style.css      # Personal style overrides
+│       └── includes/           # Modular CSS/JSON includes (border-radius, global)
+├── .config/zsh/
+│   ├── .zshrc                  # Main Zsh config
+│   ├── .zshenv                 # Environment variables
+│   ├── .p10k.zsh               # Powerlevel10k prompt config
+│   ├── plugin.zsh              # Plugin loader
+│   ├── prompt.zsh              # Prompt setup
+│   ├── user.zsh                # Personal aliases and extras
+│   ├── conf.d/                 # Auto-sourced configs (HyDE env, prompt, terminal)
+│   ├── completions/            # Custom completions (fzf, hydectl)
+│   └── functions/              # Lazy-loaded functions (duf, eza, fzf, error-handlers)
+├── .gitconfig                  # Git identity and global settings
+├── .zshrc → .config/zsh/.zshrc
+└── .zshenv → .config/zsh/.zshenv
+```
 
 ---
 
-## ⚡ Install on a New Machine
+## ⚙️ Hyprland Highlights
 
-**One-liner:**
-\`\`\`bash
-bash <(curl -s https://raw.githubusercontent.com/beshoy-13/dotfiles/main/install.sh)
-\`\`\`
-
-> Requires \`git\` and \`zsh\`. Backs up any conflicting files to \`~/.dotfiles-backup\` automatically.
-
-Or go manual — see [Manual Install](#-manual-install) below.
+- **HyDE framework** — theme management, wallbash color syncing across all apps
+- **17 animation presets** — from `minimal-1` to `LimeFrenzy`, switchable at runtime
+- **5 workflow presets** — `default`, `editing`, `gaming`, `powersaver`, `snappy`; each tunes gaps, animations, and rules for the task
+- **8 hyprlock themes** — including `HyDE`, `IBM Plex`, `SF Pro`, `Anurati`, and wallbash-synced variants
+- **NVIDIA config** — dedicated `nvidia.conf` for env vars, DRM, and explicit sync fixes (Quadro T1000, driver 595.x)
+- **hypridle chain** — dim → lock (hyprlock) → suspend, all timeout-configurable
+- **Pyprland** — scratchpad terminals and floating app management
+- **Shader effects** — via `shaders.conf`
+- **Wallbash** — auto-generates a color palette from the active wallpaper and applies it to Waybar, Kitty, hyprlock, and more
 
 ---
 
-## 🔧 Manual Install
+## 🖊 Neovim (NvChad)
 
-**1. Clone the bare repo**
-\`\`\`bash
-git clone --bare git@github.com:beshoy-13/dotfiles.git \$HOME/.dotfiles
-\`\`\`
+Built on **NvChad v2.5+** with a custom layer on top:
 
-**2. Define the alias**
-\`\`\`bash
-alias dotfiles='/usr/bin/git --git-dir=\$HOME/.dotfiles/ --work-tree=\$HOME'
-\`\`\`
+- **LSP** — configured via `lspconfig.lua` with Mason-managed servers
+- **Formatting** — `conform.nvim` with per-filetype formatter config
+- **Custom keymaps** — in `mappings.lua` (VSCode-style bindings where sensible)
+- **Plugins** — declared in `plugins/init.lua`
+- Theme: Tokyo Night
 
-**3. Back up conflicts then checkout**
-\`\`\`bash
-mkdir -p ~/.dotfiles-backup
-dotfiles checkout 2>&1 | grep "^\s" | awk '{print \$1}' | \
- xargs -I{} sh -c 'mkdir -p ~/.dotfiles-backup/\$(dirname "{}") && mv "\$HOME/{}" ~/.dotfiles-backup/{}'
+---
+
+## 🐚 Zsh Setup
+
+- **Powerlevel10k** prompt (`.p10k.zsh`)
+- Modular config split across `conf.d/`, `functions/`, and `completions/`
+- HyDE-managed env and terminal integration (`conf.d/hyde/`)
+- Lazy-loaded utility functions: `eza` (ls replacement), `fzf`, `duf`
+- Custom completions for `fzf` and `hydectl`
+- `user.zsh` for personal aliases and one-offs
+
+---
+
+## 📊 Fastfetch
+
+Custom `config.jsonc` with a side-by-side ASCII art + system info layout.
+Bundled PNG images for logo display: `arch`, `hyde`, `aisaka`, `pochita`, `ryuzaki`, `loli`.
+
+---
+
+## 🚀 Installation (Fresh Machine)
+
+> This uses the **bare git repo** method — no symlinks, no stow, the home directory itself is the worktree.
+
+### 1. Clone as a bare repo
+
+```bash
+git clone --bare https://github.com/beshoy-13/dotfiles.git $HOME/.dotfiles
+```
+
+### 2. Define the alias
+
+```bash
+alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
+```
+
+Add this to your `.zshrc` or `.bashrc` to persist it.
+
+### 3. Checkout the files
+
+```bash
 dotfiles checkout
-\`\`\`
+```
 
-**4. Hide untracked files**
-\`\`\`bash
+If git complains about existing files, back them up first:
+
+```bash
+mkdir -p ~/.dotfiles-backup
+dotfiles checkout 2>&1 | grep "^\s" | awk '{print $1}' | xargs -I{} mv $HOME/{} ~/.dotfiles-backup/{}
+dotfiles checkout
+```
+
+### 4. Hide untracked files
+
+```bash
 dotfiles config --local status.showUntrackedFiles no
-\`\`\`
+```
 
-**5. Make alias permanent**
-\`\`\`bash
-echo "alias dotfiles='/usr/bin/git --git-dir=\\\$HOME/.dotfiles/ --work-tree=\\\$HOME'" \
+### 5. Install dependencies
 
-> > ~/.config/zsh/user.zsh
-> > \`\`\`
+**Hyprland + HyDE:**
+```bash
+# Install HyDE first — it manages Hyprland, Waybar, hyprlock, hypridle, and theme tooling
+git clone --depth 1 https://github.com/HyDE-Project/HyDE ~/HyDE
+cd ~/HyDE && bash Scripts/install.sh
+```
 
-**6. Install Neovim plugins + LSP servers**
-\`\`\`bash
-nvim --headless "+Lazy! sync" +qa
-nvim --headless "+MasonInstallAll" +qa
-\`\`\`
+**Neovim:**
+```bash
+sudo pacman -S neovim
+# NvChad bootstraps automatically on first launch
+```
 
----
+**Zsh + Powerlevel10k:**
+```bash
+sudo pacman -S zsh
+chsh -s /bin/zsh
+# p10k installs via the plugin system; run `p10k configure` to reconfigure
+```
 
-## ⌨️ Hyprland Keybindings
-
-> \`Super\` = Windows / Meta key
-
-### 🪟 Window Management
-
-| Keybind                         | Action               |
-| ------------------------------- | -------------------- |
-| \`Super + Q\`                   | Close focused window |
-| \`Super + W\`                   | Toggle floating      |
-| \`Super + G\`                   | Toggle group         |
-| \`Super + J\`                   | Toggle split         |
-| \`Super + L\`                   | Lock screen          |
-| \`Super + F11\`                 | Toggle fullscreen    |
-| \`Super + Shift + F\`           | Pin window on top    |
-| \`Super + ←↑↓→\`                | Move focus           |
-| \`Super + Shift + ←↑↓→\`        | Resize window        |
-| \`Super + Shift + Ctrl + ←↑↓→\` | Move window          |
-| \`Super + mouse drag\`          | Move window          |
-| \`Super + right-click drag\`    | Resize window        |
-
-### 🚀 Launchers
-
-| Keybind                | Action              |
-| ---------------------- | ------------------- |
-| \`Super + A\`          | App launcher (Rofi) |
-| \`Super + Tab\`        | Window switcher     |
-| \`Super + T\`          | Terminal (Kitty)    |
-| \`Super + B\`          | Browser             |
-| \`Super + E\`          | File explorer       |
-| \`Super + C\`          | Text editor         |
-| \`Super + V\`          | Clipboard           |
-| \`Super + /\`          | Keybindings hint    |
-| \`Super + ,\`          | Emoji picker        |
-| \`Super + .\`          | Glyph picker        |
-| \`Ctrl + Shift + Esc\` | System monitor      |
-
-### 🎨 Theming & Wallpapers
-
-| Keybind               | Action                   |
-| --------------------- | ------------------------ |
-| \`Super + Alt + →\`   | Next wallpaper           |
-| \`Super + Alt + ←\`   | Previous wallpaper       |
-| \`Super + Shift + W\` | Wallpaper selector       |
-| \`Super + Shift + T\` | Theme selector           |
-| \`Super + Shift + R\` | Wallbash mode selector   |
-| \`Super + Alt + ↑\`   | Next Waybar layout       |
-| \`Super + Alt + ↓\`   | Previous Waybar layout   |
-| \`Super + Shift + Y\` | Animation selector       |
-| \`Super + Shift + U\` | Hyprlock layout selector |
-
-### 📸 Screenshots
-
-| Keybind               | Action                     |
-| --------------------- | -------------------------- |
-| \`Super + P\`         | Snip screen (area select)  |
-| \`Super + Ctrl + P\`  | Freeze & snip              |
-| \`Super + Print\`     | Screenshot all monitors    |
-| \`Super + Alt + P\`   | Screenshot current monitor |
-| \`Super + Shift + P\` | Color picker               |
-
-### 🗂️ Workspaces
-
-| Keybind                 | Action                    |
-| ----------------------- | ------------------------- |
-| \`Super + 1-9\`         | Go to workspace 1–9       |
-| \`Super + Ctrl + →/←\`  | Next / previous workspace |
-| \`Super + Shift + 1-9\` | Move window to workspace  |
-| \`Super + S\`           | Toggle scratchpad         |
-| \`Super + Shift + S\`   | Move window to scratchpad |
-| \`Super + scroll\`      | Cycle workspaces          |
-
-### 🔊 Hardware
-
-| Keybind                  | Action                 |
-| ------------------------ | ---------------------- |
-| \`F10\`                  | Toggle mute            |
-| \`F11 / F12\`            | Volume down / up       |
-| \`XF86 brightness keys\` | Brightness down / up   |
-| \`Super + K\`            | Switch keyboard layout |
-| \`Super + Alt + G\`      | Game mode              |
+**fastfetch:**
+```bash
+sudo pacman -S fastfetch
+```
 
 ---
 
-## ✏️ Neovim Keybindings
+## 🔄 Daily Usage
 
-> \`<leader>\` = Space
-
-### 🌐 Web Dev
-
-| Keybind                  | Action                        |
-| ------------------------ | ----------------------------- |
-| \`!\` + \`Tab\`          | HTML5 boilerplate             |
-| \`div.x>p\*3\` + \`Tab\` | Emmet abbreviation expand     |
-| Type \`<div>\`           | Auto-closes tag               |
-| \`(\` \`"\` \`{\`        | Auto-pairs                    |
-| \`:w\` on html/css/js    | Prettier formats on save      |
-| \`<leader>wf\`           | Format with Prettier manually |
-| \`<leader>we\`           | ESLint fix all                |
-| \`<leader>ws\`           | Open file in browser          |
-| \`<leader>wt\`           | Wrap word in HTML tag         |
-
-### ⚙️ Compile & Run
-
-| Keybind        | Action               |
-| -------------- | -------------------- |
-| \`<leader>cc\` | Compile current file |
-| \`<leader>cr\` | Run current file     |
-| \`<leader>cb\` | Compile + Run        |
-
-Supports: C, C++, Java, Python, JavaScript, TypeScript
-
-### 📝 Editing
-
-| Keybind               | Action                   |
-| --------------------- | ------------------------ |
-| \`Ctrl + S\`          | Save file                |
-| \`Ctrl + A\`          | Select all               |
-| \`Alt + ↑/↓\`         | Move line up / down      |
-| \`Shift + Alt + ↑/↓\` | Duplicate line up / down |
-| \`> / <\` (visual)    | Indent right / left      |
-| \`J / K\` (visual)    | Move selection down / up |
-| \`jk\`                | Escape insert mode       |
-| \`;\`                 | Enter command mode       |
-
-### 🔌 Plugins
-
-| Plugin                        | Purpose                                     |
-| ----------------------------- | ------------------------------------------- |
-| \`mattn/emmet-vim\`           | Emmet abbreviations + HTML boilerplate      |
-| \`windwp/nvim-ts-autotag\`    | Auto-close & rename HTML/JSX tags           |
-| \`windwp/nvim-autopairs\`     | Auto-pair brackets and quotes               |
-| \`NvChad/nvim-colorizer.lua\` | Inline color swatches (#hex, rgb, tailwind) |
-| \`stevearc/conform.nvim\`     | Prettier formatting on save                 |
-| \`neovim/nvim-lspconfig\`     | LSP (html, css, ts, eslint, emmet)          |
-| \`williamboman/mason.nvim\`   | Auto-install LSP servers & formatters       |
-
----
-
-## 🔄 Updating Dotfiles
-
-\`\`\`bash
-dotfiles add ~/.config/nvim/lua/plugins/init.lua
-dotfiles commit -m "feat: describe your change"
-dotfiles push
-
+```bash
+# Check status
 dotfiles status
-dotfiles diff
-\`\`\`
 
----
+# Stage a changed config
+dotfiles add ~/.config/hypr/userprefs.conf
 
-## 🧠 How the Bare Repo Works
+# Commit
+dotfiles commit -m "update userprefs"
 
-A **bare Git repo** in \`~/.dotfiles\` uses \`\$HOME\` as its work tree. The \`dotfiles\` alias is just Git with custom \`--git-dir\` and \`--work-tree\` flags — no symlinks, no extra tooling.
-
-Inspired by [this Atlassian guide](https://www.atlassian.com/git/tutorials/dotfiles).
+# Push
+dotfiles push
+```
 
 ---
 
 ## 👤 Author
 
 **Beshoy Fomail Labib**
-[LinkedIn](https://www.linkedin.com/in/beshoy-fomail/) · [GitHub](https://github.com/beshoy-13) · beshoy.f.labib@outlook.com
-READMEEOF
+
+[![GitHub](https://img.shields.io/badge/GitHub-beshoy--13-181717?style=flat-square&logo=github)](https://github.com/beshoy-13)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Beshoy%20Fomail-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/beshoy-fomail)
+[![Email](https://img.shields.io/badge/Email-beshoy.f.labib%40outlook.com-0078D4?style=flat-square&logo=microsoft-outlook)](mailto:beshoy.f.labib@outlook.com)
