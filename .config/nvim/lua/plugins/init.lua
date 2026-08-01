@@ -37,6 +37,9 @@ return {
         -- c / c++
         "clangd",
         "clang-format",
+        -- c#
+        "csharp-language-server",
+        "netcoredbg",
       },
     },
   },
@@ -45,6 +48,7 @@ return {
   --  SNIPPETS
   --  triggers (type keyword + Tab to expand):
   --    cpp    →  C++ boilerplate  (#include iostream, main, return 0)
+  --    cp     →  C++ competitive programming template (solve(), Fast IO, multi-test main)
   --    cmain  →  C  boilerplate   (#include stdio, main, return 0)
   --    jmain  →  Java boilerplate (Scanner, class, main, sc.close)
   --    pymain →  Python boilerplate (def main + __name__ guard)
@@ -80,6 +84,34 @@ return {
             "",
             "    return 0;",
             "}",
+          },
+        }),
+        s("cp", {
+          t {
+            "#include <bits/stdc++.h>",
+            "using namespace std;",
+            "",
+            "#define ll long long",
+            "#define Fast ios::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr)",
+            "",
+            "void solve() {",
+            "    ",
+          },
+          i(1),
+          t {
+            "",
+            "}",
+            "",
+            "int main() {",
+            "    Fast;",
+            "    int t = 1;",
+            "    cin >> t;",
+            "    while (t--) {",
+            "        solve();",
+            "    }",
+            "    return 0;",
+            "}",
+            "",
           },
         }),
       })

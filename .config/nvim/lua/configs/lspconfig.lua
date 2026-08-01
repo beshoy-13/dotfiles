@@ -1,6 +1,6 @@
 require("nvchad.configs.lspconfig").defaults()
 
-vim.lsp.enable { "html", "cssls", "ts_ls", "eslint", "emmet_ls", "clangd" }
+vim.lsp.enable { "html", "cssls", "ts_ls", "eslint", "emmet_ls", "clangd", "csharp_ls" }
 
 -- ESLint auto-fix on save
 vim.api.nvim_create_autocmd("LspAttach", {

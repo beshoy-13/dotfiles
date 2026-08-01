@@ -78,3 +78,10 @@ alias mkdir='mkdir -p'
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 # Display Pokemon (must be LAST, after p10k)
 [[ -o interactive ]] && pokemon-colorscripts --no-title -r 1,3,6
+
+# --- dotnet ---
+export DOTNET_ROOT=$HOME/.dotnet
+export PATH=$DOTNET_ROOT:$DOTNET_ROOT/tools:$PATH
+
+source $HOME/.dotnet-aliases.zsh
+alias dotnet="$HOME/.dotnet/dotnet"
