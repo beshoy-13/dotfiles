@@ -190,3 +190,10 @@ map("n", "<C-d>", "*``cgn", { desc = "Change next occurrence" })
 
 map("n", "<C-Left>", ":NvimTreeResize +5<CR>", { desc = "NvimTree grow" })
 map("n", "<C-Right>", ":NvimTreeResize -5<CR>", { desc = "NvimTree shrink" })
+
+map("n", "<A-Up>", ":resize +5<CR>", { desc = "Increase split height" })
+map("n", "<A-Down>", ":resize -5<CR>", { desc = "Decrease split height" })
+map("n", "<A-Left>", ":vertical resize -5<CR>", { desc = "Decrease split width" })
+map("n", "<A-Right>", ":vertical resize +5<CR>", { desc = "Increase split width" })
+
+map("n", "<leader>v", "<cmd>vsplit<CR>", { desc = "Vertical split" })

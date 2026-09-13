@@ -38,7 +38,7 @@ return {
         "clangd",
         "clang-format",
         -- c#
-        "csharp-language-server",
+        "omnisharp",
         "netcoredbg",
       },
     },
@@ -47,11 +47,14 @@ return {
   -- ══════════════════════════════════════════════════════════════
   --  SNIPPETS
   --  triggers (type keyword + Tab to expand):
-  --    cpp    →  C++ boilerplate  (#include iostream, main, return 0)
-  --    cp     →  C++ competitive programming template (solve(), Fast IO, multi-test main)
-  --    cmain  →  C  boilerplate   (#include stdio, main, return 0)
-  --    jmain  →  Java boilerplate (Scanner, class, main, sc.close)
-  --    pymain →  Python boilerplate (def main + __name__ guard)
+  --    cpp    →  C++ boilerplate
+  --    cp     →  C++ competitive programming template
+  --    cmain  →  C  boilerplate
+  --    jmain  →  Java boilerplate
+  --    pymain →  Python boilerplate
+  --    cw     →  Console.WriteLine();
+  --    ctor   →  C# constructor
+  --    prop   →  C# auto-property
   -- ══════════════════════════════════════════════════════════════
 
   {
@@ -65,7 +68,6 @@ return {
       local t = ls.text_node
       local i = ls.insert_node
 
-      -- load VS Code-style snippets from friendly-snippets
       require("luasnip.loaders.from_vscode").lazy_load()
 
       -- ── C++ ───────────────────────────────────────────────────
@@ -173,7 +175,38 @@ return {
         }),
       })
 
-      -- ── Tab: expand snippet or jump to next stop ───────────────
+      -- ── C# ────────────────────────────────────────────────────
+      ls.add_snippets("cs", {
+        s("cw", {
+          t "Console.WriteLine(",
+          i(1),
+          t ");",
+        }),
+        s("ctor", {
+          t "public ",
+          i(1, "ClassName"),
+          t "(",
+          i(2),
+          t {
+            ")",
+            "{",
+            "    ",
+          },
+          i(3),
+          t {
+            "",
+            "}",
+          },
+        }),
+        s("prop", {
+          t "public ",
+          i(1, "string"),
+          t " ",
+          i(2, "Name"),
+          t " { get; set; }",
+        }),
+      })
+
       vim.keymap.set({ "i", "s" }, "<Tab>", function()
         if ls.expand_or_jumpable() then
           ls.expand_or_jump()
@@ -182,7 +215,6 @@ return {
         end
       end, { silent = true })
 
-      -- ── Shift-Tab: jump to previous stop ──────────────────────
       vim.keymap.set({ "i", "s" }, "<S-Tab>", function()
         if ls.jumpable(-1) then
           ls.jump(-1)
@@ -195,7 +227,6 @@ return {
   --  HTML / JSX
   -- ══════════════════════════════════════════════════════════════
 
-  -- Emmet  (! + Tab = HTML boilerplate,  div.x>p*3 + Tab = expand)
   {
     "mattn/emmet-vim",
     ft = {
@@ -238,7 +269,6 @@ return {
     end,
   },
 
-  -- Auto-close & rename HTML/JSX tags
   {
     "windwp/nvim-ts-autotag",
     ft = {
@@ -266,7 +296,6 @@ return {
   --  EDITING QUALITY OF LIFE
   -- ══════════════════════════════════════════════════════════════
 
-  -- Auto-pairs  ( → ()   " → ""   { → {}   etc.
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
@@ -284,7 +313,6 @@ return {
     end,
   },
 
-  -- Inline color swatches for  #hex / rgb() / tailwind classes
   {
     "NvChad/nvim-colorizer.lua",
     ft = { "html", "css", "scss", "javascript", "typescript", "vue", "svelte" },
@@ -302,7 +330,6 @@ return {
   --  DIAGNOSTICS & PROJECT HEALTH
   -- ══════════════════════════════════════════════════════════════
 
-  -- Highlight TODO / FIXME / NOTE / HACK / BUG / WARN in every file
   {
     "folke/todo-comments.nvim",
     event = "BufRead",
@@ -310,9 +337,6 @@ return {
     opts = {},
   },
 
-  -- Clean diagnostics panel
-  --   <leader>xx  →  all project diagnostics
-  --   <leader>xb  →  current buffer only
   {
     "folke/trouble.nvim",
     cmd = "Trouble",

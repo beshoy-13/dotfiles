@@ -49,3 +49,8 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# opencode
+export PATH=/home/beshoy/.opencode/bin:$PATH
+
+export PATH=$PATH:/home/beshoy/.spicetify
